@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-lg-10 offset-lg-1">
+    <timer-display #timerDisplay>{{ display }}</timer-display>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2 offset-md-4"><timer-button (click)="start()" buttonText="Start"></timer-button></div>
+  <div class="col-md-2"><timer-button (click)="stop()" buttonText="Stop"></timer-button></div>
+</div>
+
+<div class="row">
+  <div class="col-md-2 offset-md-3"><timer-button (click)="setTimerForPomodoro()" buttonText="25"></timer-button></div>
+  <div class="col-md-2"><timer-button (click)="setTimerForLongBreak()" buttonText="15"></timer-button></div>
+  <div class="col-md-2"><timer-button (click)="setTimerForShortBreak()" buttonText="5"></timer-button></div>
+</div>

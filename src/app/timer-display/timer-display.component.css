@@ -1,0 +1,11 @@
+:host
+{
+  display: block;
+  color: #d62828;
+
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
+
+  font-size: 10em;
+  text-align: center;  
+}
