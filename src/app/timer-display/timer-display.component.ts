@@ -8,7 +8,7 @@ import { TimerDisplayService } from '../timer-display.service';
 })
 export class TimerDisplayComponent implements OnInit {
 
-  private display: string;
+  display: string;
 
   constructor(private timerDisplayService: TimerDisplayService) { 
     

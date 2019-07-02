@@ -203,6 +203,7 @@ export class TimerService {
           //If the timer is less than or equal to zero it stops.
           if(this.timer.getTime() <= 0) {
             this.stop(timerDisplay);
+            this.beep();
           }
 
         }
@@ -219,5 +220,10 @@ export class TimerService {
 
     clearInterval(this.interval);
     this.interval = undefined;
+  }
+
+  public beep() {
+    var audio = new Audio('/assets/beep.mp3');
+    audio.play();
   }
 }
