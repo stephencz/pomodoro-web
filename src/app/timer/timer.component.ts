@@ -15,7 +15,7 @@ export class TimerComponent implements OnInit {
   constructor(private timerService: TimerService) { }
 
   ngOnInit() {
-    this.timerService.setTimerByMinutes(25);
+    this.timerService.setTimerBySeconds(5);
     this.timerService.syncTimerDisplay(this.timerDisplay);
   }
   

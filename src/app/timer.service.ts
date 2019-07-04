@@ -22,17 +22,21 @@ export class Timer {
   /** The time in seconds. */
   private time: number;
 
-  /** A convience variable for keeping track of previous time checks. */
+  /** A convience variable for keeping track of the amount of time the timer is suppose to run. */
+  private duration: number;
+
+  /** A convience variable for keeping track of the last time something was done. */
   private last: number;
-  
-  /** The difference between the last recorded time and the current time. */
-  private delta: number;
+
+  /** A convience variable for keeping track of the time the timer was started. */
+  private start: number;
 
   constructor(time: number) {
     this.isRunning = false;
     this.time = time;
+    this.duration = 0;
     this.last = 0;
-    this.delta = 0;
+    this.start = 0;
   }
 
   /** @return True if the timer is running. Otherwise false. */
@@ -55,26 +59,46 @@ export class Timer {
 
   /**
    * Sets the time, in seconds, on the timer.
-   * @param time The time in seconds.
+   * @param seconds The time in seconds.
    */
-  public setTime(time: number) {
-    this.time = time; 
+  public setTime(seconds: number) {
+    this.time = seconds; 
   }
 
-  /** @return Returns the last recorded time. Used when calculating the delta time. */
+  public getDuration() {
+    return this.duration;
+  }
+
+  public setDuration(seconds: number) {
+    this.duration = seconds;
+  }
+
   public getLast() {
     return this.last;
   }
 
-  /** Stores the value of Date.now() in the last variable. */
-  public recordLast() {
+  public setLast() {
     this.last = Date.now();
   }
 
-  /** @return Returns delta time, or the time in between the last recorded time and now. */
-  public getDelta() {
-    this.delta = Date.now() - this.last;
-    return this.delta;
+  /** @return Returns the time the timer started at. */
+  public getStart() {
+    return this.start;
+  }
+
+  /** Stores the value of Date.now() in the start variable. */
+  public setStart() {
+    this.start = Date.now();
+  }
+
+  /** @return The time in milliseconds since last was last set. */
+  public getLastDelta() {
+    return Date.now() - this.last;
+  }
+
+  /** @return The time in milliseconds since the timer was started. */
+  public getStartDelta() {
+    return Date.now() - this.start;
   }
 
 }
@@ -91,16 +115,18 @@ export class TimerService {
   /** A Timer object. */
   private timer: Timer;
 
-  private interval: any;
+  /**  */
+  private timerInterval: any;
+
+  private alarmInterval: any;
 
   /**
    * Creates anew TimerService object.
    */
   constructor() { 
     this.timer = new Timer(0);
-    this.interval = undefined;
+    this.timerInterval = undefined;
   }
-
 
   /**
    * Sets the time on the timer in hours, minutes, and seconds.
@@ -110,6 +136,7 @@ export class TimerService {
    */
   public setTimer(hours: number, minutes: number, seconds: number) {
     var time = this.convertHoursToSeconds(hours) + this.convertMinutesToSeconds(minutes) + seconds;
+    this.timer.setDuration(time);
     this.timer.setTime(time);
   }
 
@@ -118,6 +145,7 @@ export class TimerService {
    * @param seconds The number of seconds on the timer.
    */
   public setTimerBySeconds(seconds: number) {
+    this.timer.setDuration(seconds);
     this.timer.setTime(seconds);
   }
 
@@ -127,6 +155,7 @@ export class TimerService {
    */
   public setTimerByMinutes(minutes: number) {
     var time = this.convertMinutesToSeconds(minutes);
+    this.timer.setDuration(time);
     this.timer.setTime(time);
   }
 
@@ -136,6 +165,7 @@ export class TimerService {
    */
   public setTimerByHours(hours: number) {
     var time = this.convertHoursToSeconds(hours);
+    this.timer.setDuration(time);
     this.timer.setTime(time);
   }
 
@@ -188,26 +218,34 @@ export class TimerService {
     if(!this.timer.getIsRunning()) 
     {
 
-      //Initialize the timer's last variable so that delta time can be calculated.
-      this.timer.recordLast();
+      //Set the Timer to running.
+      this.timer.setIsRunning(true);
 
-      this.interval = setInterval(() => {
+      //Initialize the timer's start and last variable so that the correct timer time
+      //can be calculated accurately.
+      this.timer.setStart();
+      this.timer.setLast();
 
-        //If the delta time (current time - last time) is greater than or equal to
-        //1000ms, then we deincrement the time on the timer by a second. 
-        if(this.timer.getDelta() >= 1000) {
-          this.timer.setTime(this.timer.getTime() - 1);
-          this.syncTimerDisplay(timerDisplay);
-          this.timer.recordLast();
+      //Create the timer interval which holds the process of ticking down the time.
+      this.timerInterval = setInterval(() => {
 
-          //If the timer is less than or equal to zero it stops.
-          if(this.timer.getTime() <= 0) {
-            this.stop(timerDisplay);
-            this.beep();
-          }
-
+        //If the time since the last time the timer was set is greater than or equal to
+        //1000ms than we tick the timer.
+        if(this.timer.getLastDelta() >= 1000)
+        {
+          let passed = Math.floor(this.timer.getStartDelta() / 1000); //The time in seconds since starting the timer.
+          this.timer.setTime(this.timer.getDuration() - passed); //Sets the time on the timer to the duration of the timer minus the time passed.
+          this.syncTimerDisplay(timerDisplay); //Syncs the display with the timer.
+          this.timer.setLast(); //Updates the 'last' variable.
         }
-      }, 16);
+        
+        //If the timer is less than or equal to zero it stops.
+        if(this.timer.getTime() <= 0) {
+          this.stop(timerDisplay);
+        }
+        
+      }, 16
+      );
     }
   }
 
@@ -216,14 +254,35 @@ export class TimerService {
    * @param timerDisplay The TimerDisplayComponent to clear the time from.
    */
   public stop(timerDisplay: TimerDisplayComponent) {
-    this.timer.setIsRunning(false);
 
-    clearInterval(this.interval);
-    this.interval = undefined;
+    //If the timer is running we clear the timer interval to stop it
+    //from ticking down and then we set the isRunning flag to false.
+    if(this.timer.getIsRunning()) {
+
+      clearInterval(this.timerInterval);
+      this.timerInterval = undefined;
+      this.timer.setIsRunning(false);
+
+      //If this function was called because the time was less than or equal to
+      //zero than we start the alarm interval.
+      if(this.timer.getTime() <= 0) {
+        this.alarmInterval = setInterval(() => {
+          this.beep();
+        }, 1200);
+      }
+
+    } else {
+      //If the timer stopped itself by reaching zero or less we need to provide
+      //a way for the user to stop the alarm interval. This is clears the interval.
+      clearInterval(this.alarmInterval);
+      this.alarmInterval = undefined;
+
+    }
   }
 
+  /** Plays a single alarm beep. */
   public beep() {
-    var audio = new Audio('/assets/beep.mp3');
+    var audio = new Audio('assets/beep.mp3');
     audio.play();
   }
 }
