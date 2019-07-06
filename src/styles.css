@@ -3,7 +3,13 @@ html, body
 {
   font-size: 10px;
   font-family: sans-serif;
-  
+
+  background-color: #fff;
+  background-size: cover;
+  background-position: center;
+
+  overflow: hidden;
+
   color: #000;
 
   height: 100%;

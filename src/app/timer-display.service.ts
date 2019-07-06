@@ -56,7 +56,6 @@ class TimerDisplay {
 
     } else {
       this.hours = hours;
-
     }
   }
 
@@ -70,7 +69,6 @@ class TimerDisplay {
 
     } else {
       this.minutes = minutes;
-
     }
   }
 
@@ -85,7 +83,6 @@ class TimerDisplay {
 
     } else {
       this.seconds = seconds;
-
     }
   }
 
@@ -141,7 +138,6 @@ export class TimerDisplayService {
 
     } else {
       return String(this.display.getHours() + ":");
-      
     }
   }
 
@@ -159,7 +155,6 @@ export class TimerDisplayService {
 
       } else {
         return String(minutes + ":");
-
       }
     }
   }
@@ -174,7 +169,6 @@ export class TimerDisplayService {
 
     } else {
       return String(seconds);
-
     }
   }
 

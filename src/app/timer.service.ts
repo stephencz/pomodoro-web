@@ -4,9 +4,10 @@ import { interval } from 'rxjs';
 
 /**
  * The Timer class represents a model of a digital timer. A timer is able to
- * keep track of time in seconds and whether or not the timer is currently
- * running. Additionaly, there are convience variables and functions for storing
- *  a recorded time and the delta time (the elapsed time since that recorded time).
+ * keep track of time in seconds. Additionally, a timer provides come convience
+ * variables for tracking the the duration the timer is suppose to run, whether
+ * or not the timer is or isn't running, the time the timer was started, and the
+ * time the timer last ticked down.
  */
 export class Timer {
 
@@ -31,6 +32,7 @@ export class Timer {
   /** A convience variable for keeping track of the time the timer was started. */
   private start: number;
 
+  /** Creates a new Timer object. */
   constructor(time: number) {
     this.isRunning = false;
     this.time = time;
@@ -65,18 +67,26 @@ export class Timer {
     this.time = seconds; 
   }
 
+  /** @return The duration of the timer in seconds. */
   public getDuration() {
     return this.duration;
   }
 
+  /**
+   * Sets the duration of the timer in seconds. Note, duration is a convience
+   * variable and setting it will not change the time on the timer.
+   * @param seconds 
+   */
   public setDuration(seconds: number) {
     this.duration = seconds;
   }
 
+  /** @return The time the timer last ticked down. */
   public getLast() {
     return this.last;
   }
 
+  /** Stores the value of Date.now() in the last variable. */
   public setLast() {
     this.last = Date.now();
   }
@@ -115,17 +125,23 @@ export class TimerService {
   /** A Timer object. */
   private timer: Timer;
 
-  /**  */
+  /** The interval that ticks the timer down. */
   private timerInterval: any;
 
+  /** The interval which keeps the alarm beepinmg. */
   private alarmInterval: any;
 
+  /** The timer's alarm mp3 file. */
+  private audio = new Audio('assets/beep.mp3');
+
+
   /**
-   * Creates anew TimerService object.
+   * Creates a new TimerService object.
    */
   constructor() { 
     this.timer = new Timer(0);
     this.timerInterval = undefined;
+    this.alarmInterval = undefined;
   }
 
   /**
@@ -282,7 +298,7 @@ export class TimerService {
 
   /** Plays a single alarm beep. */
   public beep() {
-    var audio = new Audio('assets/beep.mp3');
-    audio.play();
+    this.audio.play();
   }
+  
 }

@@ -2,6 +2,12 @@ import { Component, OnInit, ViewChild, ViewChildren, QueryList } from "@angular/
 import { TimerDisplayComponent } from '../timer-display/timer-display.component';
 import { TimerService } from '../timer.service';
 
+/**
+ * The TimerComponent class is a component which represents a pomodoro 
+ * productivity timer. Each TimerComponent has a TimerDisplay, as well
+ * as several buttons which are responsible for setting the internal timer
+ * on the timer.
+ */
 @Component({
   selector: 'timer',
   templateUrl: './timer.component.html',
@@ -15,7 +21,7 @@ export class TimerComponent implements OnInit {
   constructor(private timerService: TimerService) { }
 
   ngOnInit() {
-    this.timerService.setTimerBySeconds(5);
+    this.timerService.setTimerByMinutes(25);
     this.timerService.syncTimerDisplay(this.timerDisplay);
   }
   
