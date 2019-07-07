@@ -144,18 +144,16 @@ export class TimerDisplayService {
   /** @return A formatted string representing the minutes stored in the timer display. */
   private getMinutesString() {
     var minutes = this.display.getMinutes();
+    var hours = this.display.getHours();
 
-    // If there are no minutes on the timer than we return a 0 for display purposes.
-    if(minutes <= 0) {
+    if(minutes <= 0 && hours <= 0) {
       return "0:";
 
-    } else {
-      if(this.display.getHours() > 0) {
-        return String("0" + minutes + ":");
+    } else if(minutes <= 9 && hours > 0) {
+      return String("0" + minutes + ":");
 
-      } else {
-        return String(minutes + ":");
-      }
+    } else {
+      return String(minutes + ":");
     }
   }
 

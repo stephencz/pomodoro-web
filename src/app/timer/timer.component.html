@@ -14,3 +14,9 @@
   <div class="col-md-2"><timer-button (click)="setTimerForLongBreak()" buttonText="15"></timer-button></div>
   <div class="col-md-2"><timer-button (click)="setTimerForShortBreak()" buttonText="5"></timer-button></div>
 </div>
+
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <timer-input (customTimeSubmitted)="setTimerForCustom()"></timer-input>
+  </div>
+</div>

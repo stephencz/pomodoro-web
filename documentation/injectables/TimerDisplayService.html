@@ -326,8 +326,8 @@ time stored in the timer display.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="163"
-                            class="link-to-prism">src/app/timer-display.service.ts:163</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="161"
+                            class="link-to-prism">src/app/timer-display.service.ts:161</a></div>
                 </td>
             </tr>
 
@@ -652,18 +652,16 @@ export class TimerDisplayService {
   /** @return A formatted string representing the minutes stored in the timer display. */
   private getMinutesString() {
     var minutes &#x3D; this.display.getMinutes();
+    var hours &#x3D; this.display.getHours();
 
-    // If there are no minutes on the timer than we return a 0 for display purposes.
-    if(minutes &lt;&#x3D; 0) {
+    if(minutes &lt;&#x3D; 0 &amp;&amp; hours &lt;&#x3D; 0) {
       return &quot;0:&quot;;
 
-    } else {
-      if(this.display.getHours() &gt; 0) {
-        return String(&quot;0&quot; + minutes + &quot;:&quot;);
+    } else if(minutes &lt;&#x3D; 9 &amp;&amp; hours &gt; 0) {
+      return String(&quot;0&quot; + minutes + &quot;:&quot;);
 
-      } else {
-        return String(minutes + &quot;:&quot;);
-      }
+    } else {
+      return String(minutes + &quot;:&quot;);
     }
   }
 

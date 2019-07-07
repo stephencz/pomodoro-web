@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ViewChildren, QueryList } from "@angular/core";
 import { TimerDisplayComponent } from '../timer-display/timer-display.component';
 import { TimerService } from '../timer.service';
+import { TimerInputComponent } from '../timer-input/timer-input.component';
 
 /**
  * The TimerComponent class is a component which represents a pomodoro 
@@ -18,10 +19,12 @@ export class TimerComponent implements OnInit {
   /** A reference to the TimerDisplayComponent object attached to this timer. */
   @ViewChild(TimerDisplayComponent, {static: true}) timerDisplay: TimerDisplayComponent;
 
+  @ViewChild(TimerInputComponent, {static: true}) timerInput: TimerInputComponent;
+
   constructor(private timerService: TimerService) { }
 
   ngOnInit() {
-    this.timerService.setTimerByMinutes(25);
+    this.timerService.setTimerBySeconds(25);
     this.timerService.syncTimerDisplay(this.timerDisplay);
   }
   
@@ -53,6 +56,18 @@ export class TimerComponent implements OnInit {
   setTimerForShortBreak() {
     this.stop()
     this.timerService.setTimerByMinutes(5);
+    this.timerService.syncTimerDisplay(this.timerDisplay);
+  }
+
+  setTimerForCustom() {
+    this.stop();
+
+    var customTime = this.timerInput.customTime;
+
+    var hours = Math.floor(customTime / 60);
+    var minutes = Math.floor(customTime % 60);
+
+    this.timerService.setTimer(hours, minutes, 0);
     this.timerService.syncTimerDisplay(this.timerDisplay);
   }
 

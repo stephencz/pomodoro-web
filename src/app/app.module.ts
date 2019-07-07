@@ -6,16 +6,19 @@ import { AppComponent } from './app.component';
 import { TimerComponent } from './timer/timer.component';
 import { TimerDisplayComponent } from './timer-display/timer-display.component';
 import { TimerButtonComponent } from './timer-button/timer-button.component';
+import { TimerInputComponent } from './timer-input/timer-input.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TimerComponent,
     TimerDisplayComponent,
-    TimerButtonComponent
+    TimerButtonComponent,
+    TimerInputComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,16 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 html, body
 {
+  color: #000;
+
   font-size: 10px;
   font-family: sans-serif;
 
   background-color: #fff;
   background-size: cover;
   background-position: center;
-
-  overflow: hidden;
-
-  color: #000;
 
   height: 100%;
   width: 100%;
