@@ -10,7 +10,7 @@ html, body
   background-size: cover;
   background-position: center;
 
-  height: 100%;
+  height: auto;
   width: 100%;
 
   margin: 0;
@@ -22,7 +22,8 @@ html, body
   text-rendering: optimizelegibility !important;
 }
 
-.container
+.container 
 {
-  height: 100vh;
+  padding-top: 30px;
+  padding-bottom: 30px;
 }

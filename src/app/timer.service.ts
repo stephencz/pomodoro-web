@@ -145,6 +145,86 @@ export class TimerService {
   }
 
   /**
+   * Starts the timer and keeps the connected TimerDisplayComponent updated.
+   * @param timerDisplay The TimerDisplayComponent to show the time on.
+   */
+  public start(timerDisplay: TimerDisplayComponent) {
+
+    //If the timer is not running, then start an an interval timer
+    //which compares dates, ticks down the time, and syncs the display.
+    if(!this.timer.getIsRunning()) 
+    {
+
+      //Set the Timer to running.
+      this.timer.setIsRunning(true);
+
+      //Initialize the timer's start and last variable so that the correct timer time
+      //can be calculated accurately.
+      this.timer.setStart();
+      this.timer.setLast();
+
+      //Create the timer interval which holds the process of ticking down the time.
+      this.timerInterval = setInterval(() => {
+
+        //If the time since the last time the timer was set is greater than or equal to
+        //1000ms than we tick the timer.
+        if(this.timer.getLastDelta() >= 1000)
+        {
+          let passed = Math.floor(this.timer.getStartDelta() / 1000); //The time in seconds since starting the timer.
+          this.timer.setTime(this.timer.getDuration() - passed); //Sets the time on the timer to the duration of the timer minus the time passed.
+          this.syncTimerDisplay(timerDisplay); //Syncs the display with the timer.
+          this.timer.setLast(); //Updates the 'last' variable.
+        }
+        
+        //If the timer is less than or equal to zero it stops.
+        if(this.timer.getTime() <= 0) {
+          this.stop(timerDisplay);
+        }
+        
+      }, 16
+      );
+    }
+  }
+
+  /**
+   * Stops the timer.
+   * @param timerDisplay The TimerDisplayComponent to clear the time from.
+   */
+  public stop(timerDisplay: TimerDisplayComponent) {
+
+    //If the timer is running we clear the timer interval to stop it
+    //from ticking down and then we set the isRunning flag to false.
+    if(this.timer.getIsRunning()) {
+
+      clearInterval(this.timerInterval);
+      this.timerInterval = undefined;
+      this.timer.setIsRunning(false);
+
+      this.timer.setDuration(this.timer.getTime());
+
+      //If this function was called because the time was less than or equal to
+      //zero than we start the alarm interval.
+      if(this.timer.getTime() <= 0) {
+        this.alarmInterval = setInterval(() => {
+          this.beep();
+        }, 1200);
+      }
+
+    } else {
+      //If the timer stopped itself by reaching zero or less we need to provide
+      //a way for the user to stop the alarm interval. This is clears the interval.
+      clearInterval(this.alarmInterval);
+      this.alarmInterval = undefined;
+
+    }
+  }
+
+  /** Plays a single alarm beep. */
+  public beep() {
+    this.audio.play();
+  }
+
+  /**
    * Sets the time on the timer in hours, minutes, and seconds.
    * @param hours The number of hours on the timer.
    * @param minutes The number of minutes on the timer.
@@ -223,82 +303,6 @@ export class TimerService {
     display.updateDisplay(hours, minutes, seconds);
   }
 
-  /**
-   * Starts the timer and keeps the connected TimerDisplayComponent updated.
-   * @param timerDisplay The TimerDisplayComponent to show the time on.
-   */
-  public start(timerDisplay: TimerDisplayComponent) {
 
-    //If the timer is not running, then start an an interval timer
-    //which compares dates, ticks down the time, and syncs the display.
-    if(!this.timer.getIsRunning()) 
-    {
-
-      //Set the Timer to running.
-      this.timer.setIsRunning(true);
-
-      //Initialize the timer's start and last variable so that the correct timer time
-      //can be calculated accurately.
-      this.timer.setStart();
-      this.timer.setLast();
-
-      //Create the timer interval which holds the process of ticking down the time.
-      this.timerInterval = setInterval(() => {
-
-        //If the time since the last time the timer was set is greater than or equal to
-        //1000ms than we tick the timer.
-        if(this.timer.getLastDelta() >= 1000)
-        {
-          let passed = Math.floor(this.timer.getStartDelta() / 1000); //The time in seconds since starting the timer.
-          this.timer.setTime(this.timer.getDuration() - passed); //Sets the time on the timer to the duration of the timer minus the time passed.
-          this.syncTimerDisplay(timerDisplay); //Syncs the display with the timer.
-          this.timer.setLast(); //Updates the 'last' variable.
-        }
-        
-        //If the timer is less than or equal to zero it stops.
-        if(this.timer.getTime() <= 0) {
-          this.stop(timerDisplay);
-        }
-        
-      }, 16
-      );
-    }
-  }
-
-  /**
-   * Stops the timer.
-   * @param timerDisplay The TimerDisplayComponent to clear the time from.
-   */
-  public stop(timerDisplay: TimerDisplayComponent) {
-
-    //If the timer is running we clear the timer interval to stop it
-    //from ticking down and then we set the isRunning flag to false.
-    if(this.timer.getIsRunning()) {
-
-      clearInterval(this.timerInterval);
-      this.timerInterval = undefined;
-      this.timer.setIsRunning(false);
-
-      //If this function was called because the time was less than or equal to
-      //zero than we start the alarm interval.
-      if(this.timer.getTime() <= 0) {
-        this.alarmInterval = setInterval(() => {
-          this.beep();
-        }, 1200);
-      }
-
-    } else {
-      //If the timer stopped itself by reaching zero or less we need to provide
-      //a way for the user to stop the alarm interval. This is clears the interval.
-      clearInterval(this.alarmInterval);
-      this.alarmInterval = undefined;
-
-    }
-  }
-
-  /** Plays a single alarm beep. */
-  public beep() {
-    this.audio.play();
-  }
   
 }

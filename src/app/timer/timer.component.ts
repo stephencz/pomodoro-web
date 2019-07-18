@@ -24,7 +24,7 @@ export class TimerComponent implements OnInit {
   constructor(private timerService: TimerService) { }
 
   ngOnInit() {
-    this.timerService.setTimerBySeconds(25);
+    this.timerService.setTimerByMinutes(25);
     this.timerService.syncTimerDisplay(this.timerDisplay);
   }
   
@@ -59,11 +59,13 @@ export class TimerComponent implements OnInit {
     this.timerService.syncTimerDisplay(this.timerDisplay);
   }
 
+  /** Sets the timer for a custom time. */
   setTimerForCustom() {
     this.stop();
 
     var customTime = this.timerInput.customTime;
 
+    //Get hours in minutes and minutes left in hour
     var hours = Math.floor(customTime / 60);
     var minutes = Math.floor(customTime % 60);
 

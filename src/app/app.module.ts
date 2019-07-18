@@ -7,6 +7,9 @@ import { TimerComponent } from './timer/timer.component';
 import { TimerDisplayComponent } from './timer-display/timer-display.component';
 import { TimerButtonComponent } from './timer-button/timer-button.component';
 import { TimerInputComponent } from './timer-input/timer-input.component';
+import { PipComponent } from './pip/pip.component';
+import { PipManagerComponent } from './pip-manager/pip-manager.component';
+import { PipDisplayComponent } from './pip-display/pip-display.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +17,10 @@ import { TimerInputComponent } from './timer-input/timer-input.component';
     TimerComponent,
     TimerDisplayComponent,
     TimerButtonComponent,
-    TimerInputComponent
+    TimerInputComponent,
+    PipComponent,
+    PipManagerComponent,
+    PipDisplayComponent
   ],
   imports: [
     BrowserModule,

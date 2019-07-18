@@ -7,6 +7,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class TimerInputComponent {
 
+  @Input() placeholderText;
+
   customTime: number;
 
   @Output() customTimeSubmitted: EventEmitter<number> = new EventEmitter<number>();
